@@ -1,5 +1,7 @@
 # Web3chat
 
+This Web3 Chat App was inspired by Discord and done with this [Tutorial](https://www.youtube.com/watch?v=GRhO5wdLDMI&list=PLbYKSVntn8fgfbv7ESi8tS7bHu-p3-AsN&index=33)
+
 ## Technology Stack & Tools
 
 - Solidity (Writing Smart Contracts & Tests)
