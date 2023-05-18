@@ -87,4 +87,31 @@ describe("Web3chat", function () {
 
   });
 
+  describe("Withdrawing", () => {
+    const ID = 1;
+    const AMOUNT = ethers.utils.parseUnits("10", 'ether');
+    let balanceBefore;
+
+    beforeEach(async () => {
+      balanceBefore = await ethers.provider.getBalance(deployer.address);
+
+      let tx = await web3chat.connect(user).mint(ID, {value: AMOUNT});
+      await tx.wait();
+
+      tx = await web3chat.connect(deployer).withdraw();
+      await tx.wait();
+    });
+
+    it("Updates owner balance", async () => {
+      let balanceAfter = await ethers.provider.getBalance(deployer.address);
+      expect(balanceAfter).to.be.greaterThan(balanceBefore)
+    });
+
+    it("Updates contract balance", async () => {
+      let result = await ethers.provider.getBalance(web3chat.address);
+      expect(result).to.be.equal(0);
+    });
+
+  });
+
 });
