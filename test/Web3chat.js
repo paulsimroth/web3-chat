@@ -14,12 +14,16 @@ describe("Web3chat", function () {
 
   beforeEach(async () => {
     //Deployer address
-    [deployer, user] = await ethers.getSigners()
+    [deployer, user] = await ethers.getSigners();
 
     //Deploy Contract
-    const Web3chat = await ethers.getContractFactory("Web3chat")
-    web3chat = await Web3chat.deploy(NAME, SYMBOL)
-  })
+    const Web3chat = await ethers.getContractFactory("Web3chat");
+    web3chat = await Web3chat.deploy(NAME, SYMBOL);
+
+    //Create Channel
+    const tx = await web3chat.connect(deployer).createChannel("general", tokens(1));
+    await tx.wait();
+  });
 
   describe("Deployment", function () {
 
@@ -39,5 +43,21 @@ describe("Web3chat", function () {
       let result = await web3chat.owner()
       expect(result).to.equal(deployer.address)
     })
-  })
-})
+
+  });
+
+  describe("Creating Channels", function () {
+    it("Returns all channels", async () => {
+      let result = await web3chat.totalChannels();
+      expect(result).to.be.equal(1);
+    });
+
+    it("Returns channel attributes", async () => {
+      const channel = await web3chat.getChannel(1);
+      expect(channel.id).to.be.equal(1);
+      expect(channel.name).to.be.equal("general");
+      expect(channel.cost).to.be.equal(tokens(1));
+    });
+    
+  });
+});
