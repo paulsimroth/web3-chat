@@ -7,6 +7,7 @@ contract Web3chat is ERC721 {
 
     address public owner;
     uint256 public totalChannels;
+    uint256 public totalSupply;
 
     struct Channel {
         uint256 id;
@@ -15,6 +16,7 @@ contract Web3chat is ERC721 {
     }
 
     mapping(uint256 => Channel) public channels;
+    mapping(uint256 => mapping(address => bool)) public hasJoined;
 
     modifier onlyOwner() {
         require(msg.sender == owner);
@@ -32,5 +34,18 @@ contract Web3chat is ERC721 {
 
     function getChannel(uint256 _id) public view returns (Channel memory) {
         return channels[_id];
+    }
+
+    function mint(uint256 _id) public payable {
+        require(_id != 0, "_id must not be 0");
+        require(_id <= totalChannels, "_id must be <= totalChannels");
+        require(hasJoined[_id][msg.sender] == false, "msg.sender has already joined channel");
+        require(msg.value >= channels[_id].cost, "msg.value too low");
+        //Join Channel
+        hasJoined[_id][msg.sender] = true;
+
+        //Mint NFT
+        totalSupply++;
+        _safeMint(msg.sender, totalSupply);
     }
 }

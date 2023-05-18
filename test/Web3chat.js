@@ -58,6 +58,33 @@ describe("Web3chat", function () {
       expect(channel.name).to.be.equal("general");
       expect(channel.cost).to.be.equal(tokens(1));
     });
-    
+
   });
+
+  describe("Joining Channels", () => {
+    const ID = 1;
+    const AMOUNT = ethers.utils.parseUnits("1", 'ether')
+
+    beforeEach(async () => {
+      const tx = await web3chat.connect(user).mint(ID, { value: AMOUNT });
+      await tx.wait();
+    });
+
+    it("Joins the user", async () => {
+      let result = await web3chat.hasJoined(ID, user.address);
+      expect(result).to.be.equal(true);
+    });
+
+    it("Increases total supply", async () => {
+      let result = await web3chat.totalSupply();
+      expect(result).to.be.equal(ID);
+    });
+
+    it("Updates contract balance", async () => {
+      let result = await ethers.provider.getBalance(web3chat.address);
+      expect(result).to.be.equal(AMOUNT);
+    });
+
+  });
+
 });
