@@ -19,10 +19,21 @@ const socket = io('ws://localhost:3030');
 
 function App() {
 
+  const [account, setAccount] = useState(null);
+
+  const loadChainData = async () => {
+    window.ethereum.on('accountsChanged', async () => {
+      window.location.reload()
+    });
+  };
+
+  useEffect(() => {
+    loadChainData()
+  }, [])
+
   return (
     <div>
-      <h1 style={{ textAlign: "center", padding: "15px" }}>Welcome to Web3chat</h1>
-
+      <Navigation account={account} setAccount={setAccount}/>
       <main>
 
       </main>
