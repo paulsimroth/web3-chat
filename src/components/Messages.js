@@ -12,7 +12,12 @@ const Messages = ({ account, messages, currentChannel }) => {
 
   return (
     <div className="text">
+
       <div className="messages">
+
+      {currentChannel && messages.filter(message => message.channel === currentChannel.id.toString()).map((message, index) => (
+        <div className='message' key={index}>{message.text}</div>
+      ))}
 
       </div>
 

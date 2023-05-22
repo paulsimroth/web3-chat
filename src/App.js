@@ -22,9 +22,10 @@ function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [web3chat, setWeb3chat] = useState(null);
-  const [channels, setChannels] = useState([]);
 
+  const [channels, setChannels] = useState([]);
   const [currentChannel, setCurrentChannel] = useState(null);
+  const [messages, setMessages] = useState([]);
 
   const loadChainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -50,15 +51,36 @@ function App() {
   };
 
   useEffect(() => {
-    loadChainData()
-  }, [])
+    loadChainData();
+
+    socket.on("connect", () => {
+      socket.emit("get messages")
+    });
+
+    socket.on("new message", (messages) => {
+      setMessages(messages);
+    });
+
+    socket.on("get messages", (messages) => {
+      setMessages(messages);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("new message");
+      socket.off("get messages");
+    };
+
+  }, []);
 
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
+
       <main>
 
         <Servers />
+
         <Channels
           provider={provider}
           account={account}
@@ -67,7 +89,8 @@ function App() {
           currentChannel={currentChannel}
           setCurrentChannel={setCurrentChannel}
         />
-        <Messages />
+
+        <Messages account={account} messages={messages} currentChannel={currentChannel} />
 
       </main>
     </div>

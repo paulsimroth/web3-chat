@@ -1,19 +1,19 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
-const PORT = process.env.PORT || 3030
-const server = app.listen(PORT, () => console.log(`Listening on ${PORT}\n`))
+const PORT = process.env.PORT || 3030;
+const server = app.listen(PORT, () => console.log(`Listening on ${PORT}\n`));
 
 const messages = [
   {
     channel: "1",
     account: "0xcA8Fa8f0b631EcdB18Cda619C4Fc9d197c8aFfCa",
-    text: "Welcome to Dappcord!"
+    text: "Welcome to Web3chat!"
   },
   {
     channel: "2",
     account: "0xcA8Fa8f0b631EcdB18Cda619C4Fc9d197c8aFfCa",
-    text: "Welcome to Dappcord everyone! My name is John and I've been a blockchain developer for 2+ years."
+    text: "Welcome to Web3chat everyone! My name is John and I've been a blockchain developer for 2+ years."
   },
   {
     channel: "1",
@@ -50,24 +50,24 @@ const messages = [
     account: "0x176F3DAb24a159341c0509bB36B833E7fdd0a132",
     text: "Does anyone have any tips on becoming a blockchain developer?"
   },
-]
+];
 
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000"
   }
-})
+});
 
 io.on('connection', (socket) => {
   console.log('a user connected')
 
   socket.on('get messages', () => {
     io.emit('get messages', messages)
-  })
+  });
 
   socket.on('new message', (msg) => {
     messages.push(msg)
     io.emit('new message', messages)
-  })
-})
+  });
+});
