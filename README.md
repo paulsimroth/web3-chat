@@ -28,7 +28,7 @@ This Web3 Chat App was inspired by Discord and done with this [Tutorial](https:/
 
 ### 5. Run deployment script
 In a separate terminal execute:
-`$ npx hardhat run ./scripts/deploy.js --network localhost`
+`$ npx hardhat run scripts/deploy.js --network localhost`
 
 ### 6. Start Socket.io server
 `$ node server.js`
